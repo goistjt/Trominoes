@@ -25,9 +25,9 @@ public class Main {
         int[] init_deficiency = {0, 0};
         try {
             System.out.print("Which row would you like the deficiency in?: ");
-            init_deficiency[0] = scanner.nextInt();
-            System.out.print("Which column would you like the deficiency in?: ");
             init_deficiency[1] = scanner.nextInt();
+            System.out.print("Which column would you like the deficiency in?: ");
+            init_deficiency[0] = scanner.nextInt();
             if (init_deficiency[0] < 0 || init_deficiency[0] > n - 1 || init_deficiency[1] < 0 || init_deficiency[1] > n - 1) {
                 throw new Exception();
             }

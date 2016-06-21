@@ -32,7 +32,11 @@ public class QuadrantRenderer extends JComponent {
         graphics.setColor(Color.BLACK);
         for (int x = 0; x < n; x++) {
             for (int y = 0; y < n; y++) {
-                graphics.drawRect(x*sq_width, y*sq_height, sq_width, sq_height);
+                if (init_deficiency[0] == x && init_deficiency[1] == y) {
+                    graphics.fillRect(x * sq_width, y * sq_height, sq_width, sq_height);
+                } else {
+                    graphics.drawRect(x * sq_width, y * sq_height, sq_width, sq_height);
+                }
             }
         }
     }
