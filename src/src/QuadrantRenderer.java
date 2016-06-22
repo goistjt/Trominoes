@@ -38,6 +38,7 @@ public class QuadrantRenderer extends JComponent {
         int q = determineQuadrant(new int[]{deficiency[0] - offset_x, deficiency[1] - offset_y}, n);
         int[] oppositeInnerCorner;
         int[] m1, m2, m3;
+        graphics.setFont(new Font("TimesRoman", Font.PLAIN, 40));
         switch (q) {
             case 1:
                 // Have to offset 1 left for some reason, yay graphics
@@ -47,7 +48,9 @@ public class QuadrantRenderer extends JComponent {
                 graphics.fillRect(m1[0] * sq_width, m1[1] * sq_height, sq_width,
                         sq_height);
                 graphics.setColor(Color.WHITE);
-                graphics.drawString(""+(trom_num++), m1[0] * sq_width, m1[1] * sq_height);
+                //graphics.drawString(""+(trom_num++), m1[0] * sq_width, m1[1] * sq_height);
+                graphics.drawString(this.trom_num + "", m1[0] * sq_width + sq_width / 2, (m1[1] + 1) * sq_height + sq_height / 2);
+                this.trom_num++;
                 graphics.setColor(Color.BLACK);
                 // Add 1 to x to go right
                 // Q4
@@ -74,7 +77,9 @@ public class QuadrantRenderer extends JComponent {
                 graphics.fillRect(m1[0] * sq_width, m1[1] * sq_height, sq_width,
                         sq_height);
                 graphics.setColor(Color.WHITE);
-                graphics.drawString(""+(trom_num++), m1[0] * sq_width, m1[1] * sq_height);
+                //graphics.drawString(""+(trom_num++), m1[0] * sq_width, m1[1] * sq_height);
+                graphics.drawString(this.trom_num + "", m1[0] * sq_width + sq_width / 2, (m1[1] + 1) * sq_height + sq_height / 2);
+                this.trom_num++;
                 graphics.setColor(Color.BLACK);
                 // Sub 1 to x to go Left
                 // Q3
@@ -100,7 +105,9 @@ public class QuadrantRenderer extends JComponent {
                 graphics.fillRect(m1[0] * sq_width, m1[1] * sq_height, sq_width,
                         sq_height);
                 graphics.setColor(Color.WHITE);
-                graphics.drawString(""+(trom_num++), m1[0] * sq_width, m1[1] * sq_height);
+                //graphics.drawString(""+(trom_num++), m1[0] * sq_width, m1[1] * sq_height);
+                graphics.drawString(this.trom_num + "", m1[0] * sq_width + sq_width / 2, (m1[1] + 1) * sq_height + sq_height / 2);
+                this.trom_num++;
                 graphics.setColor(Color.BLACK);
                 // Sub 1 to x to go Left
                 // Q2
@@ -126,7 +133,9 @@ public class QuadrantRenderer extends JComponent {
                 graphics.fillRect(m1[0] * sq_width, m1[1] * sq_height, sq_width,
                         sq_height);
                 graphics.setColor(Color.WHITE);
-                graphics.drawString(""+(trom_num++), m1[0] * sq_width, m1[1] * sq_height);
+                //graphics.drawString(""+(trom_num++), m1[0] * sq_width, m1[1] * sq_height);
+                graphics.drawString(this.trom_num + "", m1[0] * sq_width + sq_width / 2, (m1[1] + 1) * sq_height + sq_height / 2);
+                this.trom_num++;
                 graphics.setColor(Color.BLACK);
                 // Add 1 to x to go right
                 // Q1

@@ -23,40 +23,30 @@ public class Main {
         }
         int n = (int) Math.pow(2,k);
         int[] init_deficiency = {0, 0};
+        try {
+            System.out.print("Which row would you like the deficiency in?: ");
+            init_deficiency[1] = scanner.nextInt();
+            System.out.print("Which column would you like the deficiency in?: ");
+            init_deficiency[0] = scanner.nextInt();
+            if (init_deficiency[0] < 0 || init_deficiency[0] > n - 1 || init_deficiency[1] < 0 || init_deficiency[1] > n - 1) {
+                throw new Exception();
+            }
+        } catch (Exception e) {
+            new Exception("The row and column must be integer within [0, (2^k)-1]").printStackTrace();
+            return;
+        }
         System.out.print("Which algorithm would you like to use (L-Shape or Quadrants)? (L/Q): ");
         String algo = scanner.next();
         JFrame frame = new JFrame();
         frame.setSize(SIZE);
         switch (algo) {
             case "Q":
-                try {
-                    System.out.print("Which row would you like the deficiency in?: ");
-                    init_deficiency[1] = scanner.nextInt();
-                    System.out.print("Which column would you like the deficiency in?: ");
-                    init_deficiency[0] = scanner.nextInt();
-                    if (init_deficiency[0] < 0 || init_deficiency[0] > n - 1 || init_deficiency[1] < 0 || init_deficiency[1] > n - 1) {
-                        throw new Exception();
-                    }
-                } catch (Exception e) {
-                    new Exception("The row and column must be integer within [0, (2^k)-1]").printStackTrace();
-                    return;
-                }
                 frame.setTitle("Quadrant Recursion");
                 frame.add(new QuadrantRenderer(n, init_deficiency));
                 break;
             case "L":
-                try {
-                    System.out.print("Which quadrant would you like the deficiency in?: ");
-                    init_deficiency[0] = scanner.nextInt();
-                    if (init_deficiency[0] < 1 || init_deficiency[0] > 4) {
-                        throw new Exception();
-                    }
-                } catch (Exception e) {
-                    new Exception("The quadrant must be integer within [1, 4]").printStackTrace();
-                    return;
-                }
                 frame.setTitle("L-Shape Recursion");
-                frame.add(new LRenderer(n, init_deficiency[0]));
+                frame.add(new LRenderer(n, init_deficiency));
                 break;
             default:
                 System.out.println("Please provide a valid option next time.");
