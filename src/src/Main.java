@@ -6,19 +6,19 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static final Dimension SIZE = new Dimension(800, 800);
+    private static final Dimension SIZE = new Dimension(1020, 1020);
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Welcome to Trominoes. Please enter a value 0 <= k <= 7 for the size of the grid = 2^k: ");
+        System.out.print("Welcome to Trominoes. Please enter a value 1 <= k <= 7 for the size of the grid = 2^k: ");
         int k = 0;
         try {
             k = scanner.nextInt();
-            if (k < 0 || k > 7) {
+            if (k < 1 || k > 7) {
                 throw new Exception();
             }
         } catch (Exception e) {
-            new Exception("The value entered must be an integer between 0, 7 (inclusive)").printStackTrace();
+            new Exception("The value entered must be an integer between 1, 7 (inclusive)").printStackTrace();
             return;
         }
         int n = (int) Math.pow(2,k);
@@ -63,6 +63,7 @@ public class Main {
                 return;
         }
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setResizable(false);
         frame.setVisible(true);
     }
 }

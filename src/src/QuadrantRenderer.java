@@ -2,6 +2,7 @@ package src;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Scanner;
 
 /**
  * Created by goistjt on 6/20/2016.
@@ -9,6 +10,7 @@ import java.awt.*;
 public class QuadrantRenderer extends JComponent {
     private int sq_width;
     private int sq_height;
+    private int trom_num = 1;
     /**
      * [0]: x
      * [1]: y
@@ -17,7 +19,7 @@ public class QuadrantRenderer extends JComponent {
     private int[] init_deficiency;
     private int n;
 
-    public QuadrantRenderer(int n, int[] init_deficiency) {
+    QuadrantRenderer(int n, int[] init_deficiency) {
         this.n = n;
         this.init_deficiency = init_deficiency;
     }
@@ -25,65 +27,125 @@ public class QuadrantRenderer extends JComponent {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        this.sq_height = this.sq_width = this.getWidth() / n;
+        this.sq_height = this.sq_width = (this.getWidth()-30) / n;
         Graphics2D graphics = (Graphics2D) g;
 
         drawInitGrid(graphics);
-        drawTrominoes(graphics, init_deficiency, n);
+        drawTrominoes(graphics, init_deficiency, n, 0, 0);
     }
 
-    private void drawTrominoes(Graphics2D graphics, int[] deficiency, int n) {
-        int q = determineQuadrant(deficiency, n);
+    private void drawTrominoes(Graphics2D graphics, int[] deficiency, int n, int offset_x, int offset_y) {
+        int q = determineQuadrant(new int[]{deficiency[0] - offset_x, deficiency[1] - offset_y}, n);
         int[] oppositeInnerCorner;
+        int[] m1, m2, m3;
         switch (q) {
             case 1:
                 // Have to offset 1 left for some reason, yay graphics
                 oppositeInnerCorner = new int[]{(n / 2) - 1, (n / 2)};
-                graphics.fillRect(oppositeInnerCorner[0] * sq_width, oppositeInnerCorner[1] * sq_height, sq_width,
+                // Q3
+                m1 = new int[]{oppositeInnerCorner[0] + offset_x, oppositeInnerCorner[1] + offset_y};
+                graphics.fillRect(m1[0] * sq_width, m1[1] * sq_height, sq_width,
                         sq_height);
+                graphics.setColor(Color.WHITE);
+                graphics.drawString(""+(trom_num++), m1[0] * sq_width, m1[1] * sq_height);
+                graphics.setColor(Color.BLACK);
                 // Add 1 to x to go right
-                graphics.fillRect((oppositeInnerCorner[0] + 1) * sq_width, oppositeInnerCorner[1] * sq_height, sq_width,
+                // Q4
+                m2 = new int[]{oppositeInnerCorner[0] + 1 + offset_x, oppositeInnerCorner[1] + offset_y};
+                graphics.fillRect(m2[0] * sq_width, m2[1] * sq_height, sq_width,
                         sq_height);
                 // Subtract 1 from y to go up
-                graphics.fillRect(oppositeInnerCorner[0] * sq_width, (oppositeInnerCorner[1] - 1) * sq_height, sq_width,
+                // Q2
+                m3 = new int[]{oppositeInnerCorner[0] + offset_x, oppositeInnerCorner[1] - 1 + offset_y};
+                graphics.fillRect(m3[0] * sq_width, m3[1] * sq_height, sq_width,
                         sq_height);
+                if (n != 2) {
+                    drawTrominoes(graphics, deficiency, n / 2, offset_x + n / 2, offset_y);
+                    drawTrominoes(graphics, m1, n / 2, offset_x, offset_y + n / 2);
+                    drawTrominoes(graphics, m2, n / 2, offset_x + n / 2, offset_y + n / 2);
+                    drawTrominoes(graphics, m3, n / 2, offset_x, offset_y);
+                }
                 break;
             case 2:
                 // Have to offset 1 left for some reason, yay graphics
                 oppositeInnerCorner = new int[]{(n / 2), (n / 2)};
-                graphics.fillRect(oppositeInnerCorner[0] * sq_width, oppositeInnerCorner[1] * sq_height, sq_width,
+                // Q4
+                m1 = new int[]{oppositeInnerCorner[0] + offset_x, oppositeInnerCorner[1] + offset_y};
+                graphics.fillRect(m1[0] * sq_width, m1[1] * sq_height, sq_width,
                         sq_height);
+                graphics.setColor(Color.WHITE);
+                graphics.drawString(""+(trom_num++), m1[0] * sq_width, m1[1] * sq_height);
+                graphics.setColor(Color.BLACK);
                 // Sub 1 to x to go Left
-                graphics.fillRect((oppositeInnerCorner[0] - 1) * sq_width, oppositeInnerCorner[1] * sq_height, sq_width,
+                // Q3
+                m2 = new int[]{oppositeInnerCorner[0] - 1 + offset_x, oppositeInnerCorner[1] + offset_y};
+                graphics.fillRect(m2[0] * sq_width, m2[1] * sq_height, sq_width,
                         sq_height);
                 // Subtract 1 from y to go up
-                graphics.fillRect(oppositeInnerCorner[0] * sq_width, (oppositeInnerCorner[1] - 1) * sq_height, sq_width,
+                // Q1
+                m3 = new int[]{oppositeInnerCorner[0] + offset_x, oppositeInnerCorner[1] - 1 + offset_y};
+                graphics.fillRect(m3[0] * sq_width, m3[1] * sq_height, sq_width,
                         sq_height);
+                if (n != 2) {
+                    drawTrominoes(graphics, deficiency, n / 2, offset_x, offset_y);
+                    drawTrominoes(graphics, m1, n / 2, offset_x + n / 2, offset_y + n / 2);
+                    drawTrominoes(graphics, m2, n / 2, offset_x, offset_y + n / 2);
+                    drawTrominoes(graphics, m3, n / 2, offset_x + n / 2, offset_y);
+                }
                 break;
             case 3:
-                oppositeInnerCorner = new int[]{(n / 2), (n / 2)-1};
-                graphics.fillRect(oppositeInnerCorner[0] * sq_width, oppositeInnerCorner[1] * sq_height, sq_width,
+                oppositeInnerCorner = new int[]{(n / 2), (n / 2) - 1};
+                // Q1
+                m1 = new int[]{oppositeInnerCorner[0] + offset_x, oppositeInnerCorner[1] + offset_y};
+                graphics.fillRect(m1[0] * sq_width, m1[1] * sq_height, sq_width,
                         sq_height);
+                graphics.setColor(Color.WHITE);
+                graphics.drawString(""+(trom_num++), m1[0] * sq_width, m1[1] * sq_height);
+                graphics.setColor(Color.BLACK);
                 // Sub 1 to x to go Left
-                graphics.fillRect((oppositeInnerCorner[0] - 1) * sq_width, oppositeInnerCorner[1] * sq_height, sq_width,
+                // Q2
+                m2 = new int[]{oppositeInnerCorner[0] - 1 + offset_x, oppositeInnerCorner[1] + offset_y};
+                graphics.fillRect(m2[0] * sq_width, m2[1] * sq_height, sq_width,
                         sq_height);
                 // Add 1 from y to go down
-                graphics.fillRect(oppositeInnerCorner[0] * sq_width, (oppositeInnerCorner[1] + 1) * sq_height, sq_width,
+                // Q4
+                m3 = new int[]{oppositeInnerCorner[0] + offset_x, oppositeInnerCorner[1] + 1 + offset_y};
+                graphics.fillRect(m3[0] * sq_width, m3[1] * sq_height, sq_width,
                         sq_height);
+                if (n != 2) {
+                    drawTrominoes(graphics, deficiency, n / 2, offset_x, offset_y + n / 2);
+                    drawTrominoes(graphics, m1, n / 2, offset_x + n / 2, offset_y);
+                    drawTrominoes(graphics, m2, n / 2, offset_x, offset_y);
+                    drawTrominoes(graphics, m3, n / 2, offset_x + n / 2, offset_y + n / 2);
+                }
                 break;
             case 4:
-                oppositeInnerCorner = new int[]{(n / 2)-1, (n / 2)-1};
-                graphics.fillRect(oppositeInnerCorner[0] * sq_width, oppositeInnerCorner[1] * sq_height, sq_width,
+                oppositeInnerCorner = new int[]{(n / 2) - 1, (n / 2) - 1};
+                // Q2
+                m1 = new int[]{oppositeInnerCorner[0] + offset_x, oppositeInnerCorner[1] + offset_y};
+                graphics.fillRect(m1[0] * sq_width, m1[1] * sq_height, sq_width,
                         sq_height);
+                graphics.setColor(Color.WHITE);
+                graphics.drawString(""+(trom_num++), m1[0] * sq_width, m1[1] * sq_height);
+                graphics.setColor(Color.BLACK);
                 // Add 1 to x to go right
-                graphics.fillRect((oppositeInnerCorner[0] + 1) * sq_width, oppositeInnerCorner[1] * sq_height, sq_width,
+                // Q1
+                m2 = new int[]{oppositeInnerCorner[0] + 1 + offset_x, oppositeInnerCorner[1] + offset_y};
+                graphics.fillRect(m2[0] * sq_width, m2[1] * sq_height, sq_width,
                         sq_height);
                 // Add 1 from y to go down
-                graphics.fillRect(oppositeInnerCorner[0] * sq_width, (oppositeInnerCorner[1] + 1) * sq_height, sq_width,
+                // Q3
+                m3 = new int[]{oppositeInnerCorner[0] + offset_x, oppositeInnerCorner[1] + 1 + offset_y};
+                graphics.fillRect(m3[0] * sq_width, m3[1] * sq_height, sq_width,
                         sq_height);
+                if (n != 2) {
+                    drawTrominoes(graphics, deficiency, n / 2, offset_x + n / 2, offset_y + n / 2);
+                    drawTrominoes(graphics, m1, n / 2, offset_x, offset_y);
+                    drawTrominoes(graphics, m2, n / 2, offset_x + n / 2, offset_y);
+                    drawTrominoes(graphics, m3, n / 2, offset_x, offset_y + n / 2);
+                }
                 break;
         }
-        System.out.println(q);
     }
 
     private int determineQuadrant(int[] deficiency, int n) {
