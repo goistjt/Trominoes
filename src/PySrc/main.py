@@ -132,6 +132,9 @@ class LRenderer(object):
 
     def draw_quadrant(self, deficiency, step, top_corner):
         quadrant = determine_quadrant(deficiency, self.n / pow(2, step))
+        print("quadrant: {}".format(quadrant))
+        print("deficiency: {}".format(deficiency))
+        print("top corner: {}".format(top_corner))
         if self.n / pow(2, step) <= 2:
             if quadrant == 1:
                 self.draw_tromino(top_corner,
@@ -156,15 +159,15 @@ class LRenderer(object):
                 sleep(self.sleep)
         else:
             self.draw_L(quadrant, step, top_corner)
+            step += 1
             if quadrant == 1:
-                self.draw_quadrant([deficiency[0] - self.n / 2, deficiency[1]], step + 1, [self.n / 2, 0])
+                self.draw_quadrant(deficiency, step, [top_corner[0] + self.n / pow(2, step), 0])
             elif quadrant == 2:
-                self.draw_quadrant([deficiency[0], deficiency[1]], step + 1, top_corner)
+                self.draw_quadrant(deficiency, step, top_corner)
             elif quadrant == 3:
-                self.draw_quadrant([deficiency[0], deficiency[1] - self.n / 2], step + 1, [0, self.n / 2])
+                self.draw_quadrant(deficiency, step, [0, top_corner[1] + self.n / pow(2, step)])
             elif quadrant == 4:
-                self.draw_quadrant([deficiency[0] - self.n / 2, deficiency[1] - self.n / 2], step + 1, [self.n / 2,
-                                                                                                        self.n / 2])
+                self.draw_quadrant(deficiency, step, [top_corner[0] + self.n / pow(2, step), top_corner[1] + self.n / pow(2, step)])
 
     def draw_L(self, quadrant, step, top_corner):
         if self.n / pow(2, step) <= 2:
@@ -192,23 +195,23 @@ class LRenderer(object):
             step += 1
             if quadrant == 1:
                 self.draw_L(4, step, top_corner)
-                self.draw_L(1, step, [top_corner[0] + 0, top_corner[1] + self.n / pow(2, step)])
+                self.draw_L(1, step, [top_corner[0], top_corner[1] + self.n / pow(2, step)])
                 self.draw_L(2, step, [top_corner[0] + self.n / pow(2, step), top_corner[1] + self.n / pow(2, step)])
                 self.draw_L(1, step, [top_corner[0] + self.n / pow(2, step + 1), top_corner[1] + self.n / pow(2, step + 1)])
             elif quadrant == 2:
-                self.draw_L(3, step, [top_corner[0] + self.n / pow(2, step), top_corner[1] + 0])
-                self.draw_L(1, step, [top_corner[0] + 0, top_corner[1] + self.n / pow(2, step)])
+                self.draw_L(3, step, [top_corner[0] + self.n / pow(2, step), top_corner[1]])
+                self.draw_L(1, step, [top_corner[0], top_corner[1] + self.n / pow(2, step)])
                 self.draw_L(2, step, [top_corner[0] + self.n / pow(2, step), top_corner[1] + self.n / pow(2, step)])
                 self.draw_L(2, step, [top_corner[0] + self.n / pow(2, step + 1), top_corner[1] + self.n / pow(2, step + 1)])
             elif quadrant == 3:
                 self.draw_L(4, step, top_corner)
-                self.draw_L(3, step, [top_corner[0] + self.n / pow(2, step), top_corner[1] + 0])
+                self.draw_L(3, step, [top_corner[0] + self.n / pow(2, step), top_corner[1]])
                 self.draw_L(2, step, [top_corner[0] + self.n / pow(2, step), top_corner[1] + self.n / pow(2, step)])
                 self.draw_L(3, step, [top_corner[0] + self.n / pow(2, step + 1), top_corner[1] + self.n / pow(2, step + 1)])
             elif quadrant == 4:
                 self.draw_L(4, step, top_corner)
-                self.draw_L(1, step, [top_corner[0] + 0, top_corner[1] + self.n / pow(2, step)])
-                self.draw_L(3, step, [top_corner[0] + self.n / pow(2, step), top_corner[1] + 0])
+                self.draw_L(1, step, [top_corner[0], top_corner[1] + self.n / pow(2, step)])
+                self.draw_L(3, step, [top_corner[0] + self.n / pow(2, step), top_corner[1]])
                 self.draw_L(4, step, [top_corner[0] + self.n / pow(2, step + 1), top_corner[1] + self.n / pow(2, step + 1)])
 
     def draw_tromino(self, m1, m2, m3):
