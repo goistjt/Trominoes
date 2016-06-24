@@ -2,11 +2,11 @@ package src;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Color;
 
 public class LRenderer extends JComponent {
     private int n;
     private int[] init_deficiency;
-    private int[] topLeft;
     private int sq_width;
     private int sq_height;
     private int order;
@@ -14,7 +14,6 @@ public class LRenderer extends JComponent {
     LRenderer(int n, int[] init_deficiency) {
         this.n = n;
         this.init_deficiency = init_deficiency;
-        this.topLeft = new int[]{0, 0};
         this.order = 1;
     }
 
@@ -25,12 +24,12 @@ public class LRenderer extends JComponent {
         Graphics2D graphics = (Graphics2D) g;
 
         drawInitGrid(graphics);
-        drawTrominoes(graphics, this.init_deficiency, this.n, 0, this.topLeft, Color.PINK);
+        drawQuadrant(graphics, this.init_deficiency, 0, new int[]{0, 0}, this.n, Color.PINK);
     }
 
-    private void drawTrominoes(Graphics2D graphics, int[] deficiency, int n, int step, int[] topCorner, Color c) {
-        int quadrant = determineQuadrant(deficiency, n);
-        if ((n / Math.pow(2, step)) == 2) {
+    private void drawQuadrant(Graphics2D graphics, int[] deficiency, int step, int[] topCorner, int n, Color c) {
+        int quadrant = determineQuadrant(deficiency, n / (int) Math.pow(2, step));
+        if ((n / (int) Math.pow(2, step) <= 2)) {
             graphics.setColor(c);
             graphics.setFont(new Font("TimesRoman", Font.PLAIN, 40));
             switch (quadrant) {
@@ -90,58 +89,116 @@ public class LRenderer extends JComponent {
                     this.order++;
                     break;
             }
+        } else {
+            switch (quadrant) {
+                case 1:
+                    drawTrominoes(graphics, 1, n, step, topCorner, Color.PINK);
+                    drawQuadrant(graphics, new int[]{deficiency[0] - n/2, deficiency[1]}, step + 1, new int[]{n / 2, 0}, n, Color.CYAN);
+                    break;
+                case 2:
+                    drawTrominoes(graphics, 2, n, step, topCorner, Color.PINK);
+                    drawQuadrant(graphics, deficiency, step + 1, topCorner, n, Color.CYAN);
+                    break;
+                case 3:
+                    drawTrominoes(graphics, 3, n, step, topCorner, Color.PINK);
+                    drawQuadrant(graphics, new int[]{deficiency[0], deficiency[1] - n/2}, step + 1, new int[]{0, n / 2}, n, Color.CYAN);
+                    break;
+                case 4:
+                    drawTrominoes(graphics, 4, n, step, topCorner, Color.PINK);
+                    drawQuadrant(graphics, new int[]{deficiency[0] - n/2, deficiency[1] - n/2}, step + 1, new int[]{n / 2, n / 2}, n, Color.CYAN);
+                    break;
+            }
+        }
+    }
+
+    private void drawTrominoes(Graphics2D graphics, int deficiency, int n, int step, int[] topCorner, Color c) {
+        System.out.println(n / (int) Math.pow(2, step));
+        if ((n / (int) Math.pow(2, step)) <= 2) {
+            graphics.setColor(c);
+            graphics.setFont(new Font("TimesRoman", Font.PLAIN, 40));
+            switch (deficiency) {
+                case 1:
+                    graphics.fillRect(topCorner[0] * sq_width, topCorner[1] * sq_height, sq_width,
+                            sq_height);
+                    // Add 1 to y to go down
+                    graphics.fillRect(topCorner[0] * sq_width, (topCorner[1] + 1) * sq_height, sq_width,
+                            sq_height);
+                    // add 1 to x to go right & 1 to y to go down
+                    graphics.fillRect((topCorner[0] + 1) * sq_width, (topCorner[1] + 1) * sq_height, sq_width,
+                            sq_height);
+                    graphics.setColor(Color.BLACK);
+                    graphics.drawString(this.order + "", topCorner[0] * sq_width + sq_width / 2, (topCorner[1] + 1) * sq_height + sq_height / 2);
+                    this.order++;
+                    break;
+                case 2:
+                    //add 1 to x to go right
+                    graphics.fillRect((topCorner[0] + 1) * sq_width, topCorner[1] * sq_height, sq_width,
+                            sq_height);
+                    // add 1 tp x to go right and 1 to y to go down
+                    graphics.fillRect((topCorner[0] + 1) * sq_width, (topCorner[1] + 1) * sq_height, sq_width,
+                            sq_height);
+                    // add 1 to y to go down
+                    graphics.fillRect(topCorner[0] * sq_width, (topCorner[1] + 1) * sq_height, sq_width,
+                            sq_height);
+                    graphics.setColor(Color.BLACK);
+                    graphics.drawString(this.order + "", (topCorner[0] + 1) * sq_width + sq_width / 2, (topCorner[1] + 1) * sq_height + sq_height / 2);
+                    this.order++;
+                    break;
+                case 3:
+                    // fill in top left
+                    graphics.fillRect(topCorner[0] * sq_width, topCorner[1] * sq_height, sq_width,
+                            sq_height);
+                    // add 1 to x to go right
+                    graphics.fillRect((topCorner[0] + 1) * sq_width, topCorner[1] * sq_height, sq_width,
+                            sq_height);
+                    // Add 1 to x to go right and 1 to y to go down
+                    graphics.fillRect((topCorner[0] + 1) * sq_width, (topCorner[1] + 1) * sq_height, sq_width,
+                            sq_height);
+                    graphics.setColor(Color.BLACK);
+                    graphics.drawString(this.order + "", (topCorner[0] + 1) * sq_width + sq_width / 2, topCorner[1] * sq_height + sq_height / 2);
+                    this.order++;
+                    break;
+                case 4:
+                    // fill in top left
+                    graphics.fillRect(topCorner[0] * sq_width, topCorner[1] * sq_height, sq_width,
+                            sq_height);
+                    // Add 1 to x to go right
+                    graphics.fillRect((topCorner[0] + 1) * sq_width, topCorner[1] * sq_height, sq_width,
+                            sq_height);
+                    // Add 1 to y to go down
+                    graphics.fillRect(topCorner[0] * sq_width, (topCorner[1] + 1) * sq_height, sq_width,
+                            sq_height);
+                    graphics.setColor(Color.BLACK);
+                    graphics.drawString(this.order + "", topCorner[0] * sq_width + sq_width / 2, topCorner[1] * sq_height + sq_height / 2);
+                    this.order++;
+                    break;
+            }
             return;
         }
-        int[] bottomLeft;
-        int[] bottomRight;
-        int[] middle;
-        int[] topLeft;
-        int[] topRight;
-        step++;
-        switch (quadrant) {
+        switch (deficiency) {
             case 1:
-                bottomLeft = new int[]{0, n / (int) Math.pow(2, step)};
-                bottomRight = new int[]{n / (int) Math.pow(2, step), n / (int) Math.pow(2, step)};
-                middle = new int[]{n / (int) Math.pow(4, step), n / (int) Math.pow(4, step)};
-                topLeft = topCorner;
-
-//                drawTrominoes(graphics, 4, n, step, topLeft, Color.BLUE);
-//                drawTrominoes(graphics, 1, n, step, bottomLeft, Color.GREEN);
-//                drawTrominoes(graphics, 2, n, step, bottomRight, Color.ORANGE);
-//                drawTrominoes(graphics, 1, n, step, middle, Color.RED);
+                drawTrominoes(graphics, 4, n, step + 1, topCorner, Color.BLUE);
+                drawTrominoes(graphics, 1, n, step + 1, new int[]{0, (int) Math.pow(2, step)}, Color.GREEN);
+                drawTrominoes(graphics, 2, n, step + 1, new int[]{n / (int) Math.pow(2, step), n / (int) Math.pow(2, step)}, Color.ORANGE);
+                drawTrominoes(graphics, 1, n, step + 1, new int[]{n / (int) Math.pow(4, step), n / (int) Math.pow(4, step)}, Color.RED);
                 break;
             case 2:
-                bottomLeft = new int[]{0, n / (int) Math.pow(2, step)};
-                bottomRight = new int[]{n / (int) Math.pow(2, step), n / (int) Math.pow(2, step)};
-                middle = new int[]{n / (int) Math.pow(4, step), n / (int) Math.pow(4, step)};
-                topRight = new int[]{n / (int) Math.pow(2, step), 0};
-
-//                drawTrominoes(graphics, 3, n, step, topRight, Color.BLUE);
-//                drawTrominoes(graphics, 1, n, step, bottomLeft, Color.GREEN);
-//                drawTrominoes(graphics, 2, n, step, bottomRight, Color.ORANGE);
-//                drawTrominoes(graphics, 2, n, step, middle, Color.RED);
+                drawTrominoes(graphics, 3, n, step + 1, new int[]{n / (int) Math.pow(2, step), 0}, Color.BLUE);
+                drawTrominoes(graphics, 1, n, step + 1, new int[]{0, n / (int) Math.pow(2, step)}, Color.GREEN);
+                drawTrominoes(graphics, 2, n, step + 1, new int[]{n / (int) Math.pow(2, step), n / (int) Math.pow(2, step)}, Color.ORANGE);
+                drawTrominoes(graphics, 2, n, step + 1, new int[]{n / (int) Math.pow(4, step), n / (int) Math.pow(4, step)}, Color.RED);
                 break;
             case 3:
-                bottomRight = new int[]{n / (int) Math.pow(2, step), n / (int) Math.pow(2, step)};
-                middle = new int[]{n / (int) Math.pow(4, step), n / (int) Math.pow(4, step)};
-                topLeft = topCorner;
-                topRight = new int[]{n / (int) Math.pow(2, step), 0};
-
-//                drawTrominoes(graphics, 4, n, step, topLeft, Color.BLUE);
-//                drawTrominoes(graphics, 3, n, step, topRight, Color.GREEN);
-//                drawTrominoes(graphics, 2, n, step, bottomRight, Color.ORANGE);
-//                drawTrominoes(graphics, 3, n, step, middle, Color.RED);
+                drawTrominoes(graphics, 4, n, step + 1, topCorner, Color.BLUE);
+                drawTrominoes(graphics, 3, n, step + 1, new int[]{n / (int) Math.pow(2, step), 0}, Color.GREEN);
+                drawTrominoes(graphics, 2, n, step + 1, new int[]{n / (int) Math.pow(2, step), n / (int) Math.pow(2, step)}, Color.ORANGE);
+                drawTrominoes(graphics, 3, n, step + 1, new int[]{n / (int) Math.pow(4, step), n / (int) Math.pow(4, step)}, Color.RED);
                 break;
             case 4:
-                bottomLeft = new int[]{0, n / (int) Math.pow(2, step)};
-                middle = new int[]{n / (int) Math.pow(4, step), n / (int) Math.pow(4, step)};
-                topLeft = topCorner;
-                topRight = new int[]{n / (int) Math.pow(2, step), 0};
-
-//                drawTrominoes(graphics, 4, n, step, topLeft, Color.BLUE);
-//                drawTrominoes(graphics, 1, n, step, bottomLeft, Color.GREEN);
-//                drawTrominoes(graphics, 3, n, step, topRight, Color.ORANGE);
-//                drawTrominoes(graphics, 4, n, step, middle, Color.RED);
+                drawTrominoes(graphics, 4, n, step + 1, topCorner, Color.BLUE);
+                drawTrominoes(graphics, 1, n, step + 1, new int[]{0, n / (int) Math.pow(2, step)}, Color.GREEN);
+                drawTrominoes(graphics, 3, n, step + 1, new int[]{n / (int) Math.pow(2, step), 0}, Color.ORANGE);
+                drawTrominoes(graphics, 4, n, step + 1, new int[]{n / (int) Math.pow(4, step), n / (int) Math.pow(4, step)}, Color.RED);
                 break;
         }
     }
