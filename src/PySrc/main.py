@@ -199,22 +199,22 @@ class LRenderer(object):
                 self.draw_L(4, step, top_corner)
                 self.draw_L(1, step, [0, self.n / pow(2, step)])
                 self.draw_L(2, step, [self.n / pow(2, step), self.n / pow(2, step)])
-                self.draw_L(1, step, [self.n / pow(4, step), self.n / pow(4, step)])
+                self.draw_L(1, step, [self.n / pow(2, step + 1), self.n / pow(2, step + 1)])
             elif quadrant == 2:
                 self.draw_L(3, step, [self.n / pow(2, step), 0])
                 self.draw_L(1, step, [0, self.n / pow(2, step)])
                 self.draw_L(2, step, [self.n / pow(2, step), self.n / pow(2, step)])
-                self.draw_L(2, step, [self.n / pow(4, step), self.n / pow(4, step)])
+                self.draw_L(2, step, [self.n / pow(2, step + 1), self.n / pow(2, step + 1)])
             elif quadrant == 3:
                 self.draw_L(4, step, top_corner)
                 self.draw_L(3, step, [self.n / pow(2, step), 0])
                 self.draw_L(2, step, [self.n / pow(2, step), self.n / pow(2, step)])
-                self.draw_L(3, step, [self.n / pow(4, step), self.n / pow(4, step)])
+                self.draw_L(3, step, [self.n / pow(2, step + 1), self.n / pow(2, step + 1)])
             elif quadrant == 4:
                 self.draw_L(4, step, top_corner)
                 self.draw_L(1, step, [0, self.n / pow(2, step)])
                 self.draw_L(3, step, [self.n / pow(2, step), 0])
-                self.draw_L(4, step, [self.n / pow(4, step), self.n / pow(4, step)])
+                self.draw_L(4, step, [self.n / pow(2, step + 1), self.n / pow(2, step + 1)])
 
     def draw_tromino(self, m1, m2, m3):
         color = color_list[randint(0, len(color_list) - 1)]
