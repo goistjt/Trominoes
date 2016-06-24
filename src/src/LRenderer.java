@@ -178,7 +178,7 @@ public class LRenderer extends JComponent {
         switch (deficiency) {
             case 1:
                 drawTrominoes(graphics, 4, n, step + 1, topCorner, Color.BLUE);
-                drawTrominoes(graphics, 1, n, step + 1, new int[]{0, (int) Math.pow(2, step)}, Color.GREEN);
+                drawTrominoes(graphics, 1, n, step + 1, new int[]{0, n / (int) Math.pow(2, step)}, Color.GREEN);
                 drawTrominoes(graphics, 2, n, step + 1, new int[]{n / (int) Math.pow(2, step), n / (int) Math.pow(2, step)}, Color.ORANGE);
                 drawTrominoes(graphics, 1, n, step + 1, new int[]{n / (int) Math.pow(4, step), n / (int) Math.pow(4, step)}, Color.RED);
                 break;

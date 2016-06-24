@@ -1,4 +1,4 @@
-from PySrc.graphics import *
+from graphics import *
 from time import sleep
 from random import randint
 
@@ -112,7 +112,7 @@ class LRenderer(object):
     def render(self):
         self.draw_init_grid()
         input("Press Enter to Begin Tiling")
-        self.draw_quadrant(self.init_deficiency, 0, [0, 0], self.n)
+        self.draw_quadrant(self.init_deficiency, 0, [0, 0])
         input("Press Enter to Close")
         self.win.close()
 
@@ -174,7 +174,6 @@ class LRenderer(object):
                                   [top_corner[0], top_corner[1] + 1],
                                   [top_corner[0] + 1, top_corner[1] + 1])
                 sleep(self.sleep)
-
             elif quadrant == 2:
                 self.draw_tromino([top_corner[0] + 1, top_corner[1]],
                                   [top_corner[0] + 1, top_corner[1] + 1],
@@ -192,13 +191,25 @@ class LRenderer(object):
                 sleep(self.sleep)
         else:
             if quadrant == 1:
-                pass
+                self.draw_L(4, step + 1, top_corner)
+                self.draw_L(1, step + 1, [0, self.n / pow(2, step)])
+                self.draw_L(2, step + 1, [self.n / pow(2, step), self.n / pow(2, step)])
+                self.draw_L(1, step + 1, [self.n / pow(4, step), self.n / pow(4, step)])
             elif quadrant == 2:
-                pass
+                self.draw_L(3, step + 1, [self.n / pow(2, step), 0])
+                self.draw_L(1, step + 1, [0, self.n / pow(2, step)])
+                self.draw_L(2, step + 1, [self.n / pow(2, step), self.n / pow(2, step)])
+                self.draw_L(1, step + 1, [self.n / pow(4, step), self.n / pow(4, step)])
             elif quadrant == 3:
-                pass
+                self.draw_L(4, step + 1, top_corner)
+                self.draw_L(3, step + 1, [self.n / pow(2, step), 0])
+                self.draw_L(2, step + 1, [self.n / pow(2, step), self.n / pow(2, step)])
+                self.draw_L(3, step + 1, [self.n / pow(4, step), self.n / pow(4, step)])
             elif quadrant == 4:
-                pass
+                self.draw_L(4, step + 1, top_corner)
+                self.draw_L(1, step + 1, [0, self.n / pow(2, step)])
+                self.draw_L(3, step + 1, [self.n / pow(2, step), 0])
+                self.draw_L(4, step + 1, [self.n / pow(4, step), self.n / pow(4, step)])
 
     def draw_tromino(self, m1, m2, m3):
         color = color_list[randint(0, len(color_list) - 1)]
@@ -248,7 +259,7 @@ def main():
     if algo == "Q":
         QuadrantRenderer(n, init_deficiency).render()
     elif algo == "L":
-        pass
+        LRenderer(n, init_deficiency).render()
     else:
         print("Please provide a valid option next time.")
         return
