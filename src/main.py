@@ -8,6 +8,7 @@ color_list = ['red', 'purple', 'yellow', 'green', 'blue', 'cyan', 'orange', 'mar
 
 class QuadrantRenderer(object):
     def __init__(self, n, init_deficiency):
+        """initializes the quadrant renderer"""
         self.win = GraphWin("Quandrant Renderer", 1000, 1000)
         self.n = n
         self.sleep = float(input("How long between drawing of trominoes (in seconds)?: "))
@@ -15,6 +16,7 @@ class QuadrantRenderer(object):
         self.grid_size = int(1000 / n)
 
     def render(self):
+        """renders the quadrant tiling"""
         self.draw_init_grid()
         input("Press Enter to Begin Tiling")
         self.draw_trominoes(self.init_deficiency, self.n, 0, 0)
@@ -22,6 +24,7 @@ class QuadrantRenderer(object):
         self.win.close()
 
     def draw_init_grid(self):
+        """draws the initial grid lines and deficient square"""
         for x in range(0, self.n):
             for y in range(0, self.n):
                 if self.init_deficiency[0] == x and self.init_deficiency[1] == y:
@@ -36,6 +39,7 @@ class QuadrantRenderer(object):
                 r.draw(self.win)
 
     def draw_trominoes(self, deficiency, n, offset_column, offset_row):
+        """recursive drawing using the quadrant algorithm"""
         quadrant = determine_quadrant([deficiency[0] - offset_column, deficiency[1] - offset_row], n)
         if quadrant == 1:
             m1 = [n / 2 - 1 + offset_column, n / 2 + offset_row]
@@ -83,6 +87,7 @@ class QuadrantRenderer(object):
                 self.draw_trominoes(m3, n / 2, offset_column, offset_row + n / 2)
 
     def draw_tromino(self, m1, m2, m3):
+        """draw a tromino at the three given squares of the board"""
         color = color_list[randint(0, len(color_list) - 1)]
         r = Rectangle(Point(m1[0] * self.grid_size, m1[1] * self.grid_size),
                       Point(m1[0] * self.grid_size + self.grid_size,
@@ -103,6 +108,7 @@ class QuadrantRenderer(object):
 
 class LRenderer(object):
     def __init__(self, n, init_deficiency):
+        """initializes the L-shape renderer"""
         self.win = GraphWin("LShape Renderer", 1000, 1000)
         self.n = n
         self.sleep = float(input("How long between drawing of trominoes (in seconds)?: "))
@@ -110,6 +116,7 @@ class LRenderer(object):
         self.grid_size = int(1000 / n)
 
     def render(self):
+        """renders the L-shape tiling"""
         self.draw_init_grid()
         input("Press Enter to Begin Tiling")
         self.draw_quadrant(self.init_deficiency, 0, [0, 0])
@@ -117,6 +124,7 @@ class LRenderer(object):
         self.win.close()
 
     def draw_init_grid(self):
+        """draws the initial grid lines and deficient square"""
         for x in range(0, self.n):
             for y in range(0, self.n):
                 if self.init_deficiency[0] == x and self.init_deficiency[1] == y:
@@ -131,11 +139,9 @@ class LRenderer(object):
                 r.draw(self.win)
 
     def draw_quadrant(self, deficiency, step, top_corner):
-        quadrant = determine_quadrant_L(deficiency, self.n, step)
+        """recursive drawing of the quadrant with the deficient square"""
         color = color_list[randint(0, len(color_list) - 1)]
-        print("quadrant: {}".format(quadrant))
-        print("deficiency: {}".format(deficiency))
-        print("top corner: {}".format(top_corner))
+        quadrant = determine_quadrant(deficiency, self.n / pow(2, step))
         if self.n / pow(2, step) <= 2:
             if quadrant == 1:
                 self.draw_tromino(top_corner,
@@ -162,16 +168,16 @@ class LRenderer(object):
             self.draw_L(quadrant, step, top_corner, color)
             step += 1
             if quadrant == 1:
-                self.draw_quadrant(deficiency, step, [top_corner[0] + self.n / pow(2, step), 0])
+                self.draw_quadrant([deficiency[0] - self.n / pow(2, step), deficiency[1]], step, [top_corner[0] + self.n / pow(2, step), top_corner[1]])
             elif quadrant == 2:
                 self.draw_quadrant(deficiency, step, top_corner)
             elif quadrant == 3:
-                self.draw_quadrant(deficiency, step, [0, top_corner[1] + self.n / pow(2, step)])
+                self.draw_quadrant([deficiency[0], deficiency[1] - self.n / pow(2, step)], step, [top_corner[0], top_corner[1] + self.n / pow(2, step)])
             elif quadrant == 4:
-                self.draw_quadrant(deficiency, step,
-                                   [top_corner[0] + self.n / pow(2, step), top_corner[1] + self.n / pow(2, step)])
+                self.draw_quadrant([deficiency[0] - self.n / pow(2, step), deficiency[1] - self.n / pow(2, step)], step, [top_corner[0] + self.n / pow(2, step), top_corner[1] + self.n / pow(2, step)])
 
     def draw_L(self, quadrant, step, top_corner, color):
+        """recursive drawing of the L-shape"""
         if self.n / pow(2, step) <= 2:
             if quadrant == 1:
                 self.draw_tromino(top_corner,
@@ -228,6 +234,7 @@ class LRenderer(object):
                                       top_corner[1] + self.n / pow(2, step + 1)], color)
 
     def draw_tromino(self, m1, m2, m3, color):
+        """draw a tromino at the three given squares in the given color"""
         r = Rectangle(Point(m1[0] * self.grid_size, m1[1] * self.grid_size),
                       Point(m1[0] * self.grid_size + self.grid_size,
                             m1[1] * self.grid_size + self.grid_size))
@@ -245,20 +252,8 @@ class LRenderer(object):
         r.draw(self.win)
 
 
-def determine_quadrant_L(deficiency, n, step):
-    if deficiency[0] < n / 2:
-        if deficiency[1] < n / 2:
-            return 2
-        else:
-            return 3
-    else:
-        if deficiency[1] < n / 2:
-            return 1
-        else:
-            return 4
-
-
 def determine_quadrant(deficiency, n):
+    """ determines the quadrant that the deficient square is in"""
     if deficiency[0] < n / 2:
         if deficiency[1] < n / 2:
             return 2
@@ -272,6 +267,7 @@ def determine_quadrant(deficiency, n):
 
 
 def main():
+    """gather user input of board size, deficient square location, and algorithm choice"""
     k = int(input("Welcome to Trominoes. Please enter a value 1 <= k <= 7 for the size of the grid = 2^k: "))
     if k < 1 or k > 7:
         print("The value entered must be an integer between 1, 7 (inclusive)")
